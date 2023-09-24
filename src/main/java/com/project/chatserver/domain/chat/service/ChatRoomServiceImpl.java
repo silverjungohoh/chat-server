@@ -1,10 +1,12 @@
 package com.project.chatserver.domain.chat.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.chatserver.domain.chat.model.dto.ChatRoomInfoResponse;
 import com.project.chatserver.domain.chat.model.dto.CreateChatRoomRequest;
 import com.project.chatserver.domain.chat.model.dto.CreateChatRoomResponse;
 import com.project.chatserver.domain.chat.model.entity.ChatRoom;
@@ -44,5 +46,10 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 		chatRoomMemberRepository.save(chatRoomMember);
 
 		return CreateChatRoomResponse.fromEntity(chatRoom);
+	}
+
+	@Override
+	public List<ChatRoomInfoResponse> getChatRoomList() {
+		return chatRoomRepository.findAllChatRoom();
 	}
 }
