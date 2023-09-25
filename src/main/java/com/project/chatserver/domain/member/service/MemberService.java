@@ -26,4 +26,6 @@ public interface MemberService {
 	 * token 재발급
 	 */
 	ReissueTokenResponse reissue(String refreshToken, Member member);
+
+	MemberInfoResponse getMemberInfo(Member member);
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.project.chatserver.domain.member.model.dto.LoginRequest;
 import com.project.chatserver.domain.member.model.dto.LoginResponse;
 import com.project.chatserver.domain.member.model.dto.LogoutRequest;
+import com.project.chatserver.domain.member.model.dto.MemberInfoResponse;
 import com.project.chatserver.domain.member.model.dto.ReissueTokenResponse;
 import com.project.chatserver.domain.member.model.dto.SignUpRequest;
 import com.project.chatserver.domain.member.model.entity.LogoutAccessToken;
@@ -128,6 +129,13 @@ public class MemberServiceImpl implements MemberService {
 		return ReissueTokenResponse.builder()
 			.accessToken(newAccessToken)
 			.refreshToken(newRefreshToken)
+			.build();
+	}
+
+	@Override
+	public MemberInfoResponse getMemberInfo(Member member) {
+		return MemberInfoResponse.builder()
+			.nickname(member.getNickname())
 			.build();
 	}
 

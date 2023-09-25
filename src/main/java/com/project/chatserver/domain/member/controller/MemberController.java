@@ -64,12 +64,10 @@ public class MemberController {
 		return ResponseEntity.ok(response);
 	}
 
-	/**
-	 * TEST
-	 */
-	@GetMapping("/test")
-	public ResponseEntity<?> test(@AuthenticationPrincipal CustomUserDetails userDetails) {
+	@GetMapping
+	public ResponseEntity<?> getMemberInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
-		return ResponseEntity.ok(userDetails.getUsername());
+		MemberInfoResponse response = memberService.getMemberInfo(userDetails.getMember());
+		return ResponseEntity.ok(response);
 	}
 }
