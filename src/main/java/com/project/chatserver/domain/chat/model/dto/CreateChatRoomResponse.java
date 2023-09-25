@@ -17,13 +17,13 @@ public class CreateChatRoomResponse {
 
 	private Integer maxParticipant;
 
-	private String uniqueKey;
+	private Long chatRoomId;
 
 	public static CreateChatRoomResponse fromEntity(ChatRoom chatRoom) {
 		return CreateChatRoomResponse.builder()
 			.title(chatRoom.getTitle())
 			.maxParticipant(chatRoom.getMaxParticipant())
-			.uniqueKey(chatRoom.getUniqueKey())
+			.chatRoomId(chatRoom.getId())
 			.build();
 	}
 }
