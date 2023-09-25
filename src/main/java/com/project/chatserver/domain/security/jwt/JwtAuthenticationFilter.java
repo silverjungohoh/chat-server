@@ -28,7 +28,7 @@ import java.util.Objects;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private static final String[] EXCLUDED_URL
-		= {"/api/members/sign-up", "/api/members/login", "/h2-console"};
+		= {"/api/members/sign-up", "/api/members/login", "/h2-console", "/ws/**"};
 	private static final String REISSUE_TOKEN_URL = "/api/members/token";
 
 	private final JwtTokenProvider jwtTokenProvider;

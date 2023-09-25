@@ -55,7 +55,7 @@ public class SecurityConfig {
 
 		http.authorizeRequests()
 			.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-			.antMatchers("/h2-console/**", "/api/members/sign-up",
+			.antMatchers("/h2-console/**", "/api/members/sign-up", "/ws/**",
 				"/api/members/login", "/api/members/logout", "/api/members/token").permitAll()
 			.anyRequest().authenticated();
 
