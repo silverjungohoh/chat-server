@@ -15,14 +15,14 @@ public class CreateChatRoomResponse {
 
 	private String title;
 
-	private Integer maxParticipants;
+	private Integer maxParticipant;
 
 	private String uniqueKey;
 
 	public static CreateChatRoomResponse fromEntity(ChatRoom chatRoom) {
 		return CreateChatRoomResponse.builder()
 			.title(chatRoom.getTitle())
-			.maxParticipants(chatRoom.getMaxParticipant())
+			.maxParticipant(chatRoom.getMaxParticipant())
 			.uniqueKey(chatRoom.getUniqueKey())
 			.build();
 	}
