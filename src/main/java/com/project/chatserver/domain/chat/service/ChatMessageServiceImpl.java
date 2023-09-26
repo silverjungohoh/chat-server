@@ -7,12 +7,16 @@ import java.time.LocalDateTime;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.chatserver.domain.chat.model.dto.ChatMessageRequest;
+import com.project.chatserver.domain.chat.model.dto.ChatMessageResponse;
 import com.project.chatserver.domain.chat.model.dto.EnterChatMessageResponse;
+import com.project.chatserver.domain.chat.model.entity.ChatMessage;
 import com.project.chatserver.domain.chat.model.entity.ChatRoom;
 import com.project.chatserver.domain.chat.model.entity.ChatRoomMember;
 import com.project.chatserver.domain.chat.model.type.MessageType;
+import com.project.chatserver.domain.chat.repository.jpa.ChatMessageRepository;
 import com.project.chatserver.domain.chat.repository.jpa.ChatRoomMemberRepository;
 import com.project.chatserver.domain.chat.repository.jpa.ChatRoomRepository;
 import com.project.chatserver.domain.member.model.entity.Member;
@@ -33,6 +37,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 	private final ChatRoomRepository chatRoomRepository;
 	private final MemberRepository memberRepository;
 	private final ChatRoomMemberRepository chatRoomMemberRepository;
+	private final ChatMessageRepository chatMessageRepository;
 	private final RabbitTemplate rabbitTemplate;
 
 	@Override
@@ -69,5 +74,38 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 			.build();
 
 		rabbitTemplate.convertAndSend(CHAT_EXCHANGE_NAME, "room." + roomId, response);
+	}
+
+	@Override
+	@Transactional
+	public void send(ChatMessageRequest request, Long roomId) {
+
+		ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId())
+			.orElseThrow(() -> new ChatException(CHAT_ROOM_NOT_FOUND));
+
+		Member member = memberRepository.findByNickname(request.getSender())
+			.orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+		ChatMessage message = saveChatMessage(chatRoom, member, request.getContent());
+
+		ChatMessageResponse response = ChatMessageResponse.builder()
+			.type(MessageType.TALK)
+			.content(message.getContent())
+			.nickname(member.getNickname())
+			.createdAt(message.getCreatedAt())
+			.build();
+
+		rabbitTemplate.convertAndSend(CHAT_EXCHANGE_NAME, "room." + roomId, response);
+	}
+
+	private ChatMessage saveChatMessage(ChatRoom chatRoom, Member member, String content) {
+
+		ChatMessage message = ChatMessage.builder()
+			.content(content)
+			.member(member)
+			.chatRoom(chatRoom)
+			.build();
+
+		return chatMessageRepository.save(message);
 	}
 }
